@@ -1,1 +1,1 @@
-sudo black . 
+python3 -m black .
