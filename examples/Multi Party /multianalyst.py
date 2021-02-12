@@ -1,5 +1,5 @@
-from analyst import DataWorker, DataSource, Analyst, WorkerGroup
-from frameworks import framework
+from GreyNsights.analyst import DataWorker, DataSource, Analyst, WorkerGroup
+from GreyNsights.frameworks import framework
 
 frameworks = framework()
 

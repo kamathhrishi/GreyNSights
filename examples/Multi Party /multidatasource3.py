@@ -1,6 +1,6 @@
 import pandas
-from host import Dataset, DataOwner
-from config import Config
+from GreyNsights.host import Dataset, DataOwner
+from GreyNsights.config import Config
 
 dataset = pandas.read_csv("week_data.csv")
 

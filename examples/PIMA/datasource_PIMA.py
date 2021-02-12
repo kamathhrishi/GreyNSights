@@ -3,9 +3,9 @@ import codecs
 import pickle
 import pandas
 import random
-from config import Config
-from analyst import Pointer
-from host import Dataset, DataOwner, SyntheticData
+from GreyNsights.config import Config
+from GreyNsights.analyst import Pointer
+from GreyNsights.host import Dataset, DataOwner
 
 
 def run():
