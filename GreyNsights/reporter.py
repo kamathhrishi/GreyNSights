@@ -10,6 +10,7 @@ from pydp.algorithms.laplacian import (
 )
 import pandas as pd
 import numpy as np
+import numpy
 
 
 class DPReporter:
@@ -34,36 +35,144 @@ class DPReporter:
 
     def Count(self, data):
 
-        x = Count(epsilon=self.epsilon, dtype="int")
+        dtype = None
+
+        if isinstance(data[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data[0], numpy.int64):
+
+            dtype = "int"
+
+        x = Count(epsilon=self.epsilon, dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
     def Mean(self, data):
 
-        x = BoundedMean(self.epsilon, 0, int(max(data)), dtype="float")
+        dtype = None
+
+        if isinstance(data[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data[0], numpy.int64):
+
+            dtype = "int"
+
+        x = BoundedMean(self.epsilon, 0, int(max(data)), dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
     def Sum(self, data):
-        x = BoundedSum(self.epsilon, 0, int(max(data)), dtype="int")
+
+        print(data)
+
+        dtype = None
+
+        if isinstance(data.iloc[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data.iloc[0], numpy.int64):
+
+            dtype = "int"
+
+        elif isinstance(data.iloc[0], numpy.bool_):
+
+            dtype = "int"
+            data = data.astype(numpy.int64)
+
+        print(int(max(data)))
+
+        x = BoundedSum(self.epsilon, 0, int(max(data)), dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
     def Percetile(self, data):
 
-        x = Percentile(epsilon=self.epsilon, dtype="int")
+        dtype = None
+
+        if isinstance(data[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data[0], numpy.int64):
+
+            dtype = "int"
+
+        x = Percentile(epsilon=self.epsilon, dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
     def Max(self, data):
 
-        x = Max(epsilon=self.epsilon, dtype="float")
+        dtype = None
+
+        if isinstance(data[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data[0], numpy.int64):
+
+            dtype = "int"
+
+        x = Max(epsilon=self.epsilon, dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
     def Min(self, data):
 
-        x = Min(epsilon=self.epsilon, dtype="float")
+        dtype = None
+
+        if isinstance(data[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data[0], numpy.int64):
+
+            dtype = "int"
+
+        x = Min(epsilon=self.epsilon, dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
     def Median(self, data):
 
-        x = Median(epsilon=self.epsilon, dtype="float")
+        dtype = None
+
+        if isinstance(data[0], numpy.float64):
+
+            dtype = "float"
+
+        elif isinstance(data[0], numpy.int64):
+
+            dtype = "int"
+
+        x = Median(epsilon=self.epsilon, dtype=dtype)
+        self.privacybudget -= self.epsilon
+        if self.privacybudget < 0:
+            raise Exception
+        print("Privacy Budget", self.privacybudget)
         return x.quick_result(list(data))
 
 

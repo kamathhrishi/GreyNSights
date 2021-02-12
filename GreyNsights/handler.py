@@ -1,14 +1,14 @@
-import pandas
-from types import ModuleType
-
 from .utils import log_message
 from .QueryEngine import QueryEngine
 from .analyst import Pointer
 from .generic import Message, PrivateDataAccess
+from types import ModuleType
+import pandas
 from .frameworks import framework_support
 from .analyst import Command
 from .graph import Node, visualize, validate
-from .synthetic import SyntheticData
+from .mpc import gen_shares
+import random
 
 
 class QueryHandler:
@@ -48,13 +48,23 @@ class QueryHandler:
             "init": self.init_pointer,
             "store": self.store_val,
             "handle_query": self.handle_query,
-            "sample_synthetic": self.sample_synthetic,
         }
 
         self.dp_queries = ["count", "mean", "sum", "percentile", "max", "min", "median"]
 
-        if type(query) == str and query in self.dp_queries:
+        print("\n")
+        print(query)
+        print("\n")
 
+        if (
+            type(query) == str
+            and query in self.dp_queries
+            and self.owner.config.privacy_budget != "None"
+        ):
+
+            print("\n")
+            print("Does this satisfy?")
+            print("\n")
             sent_msg = self.handle_dp_query(
                 buffer, data=data, query=query, recieved_msg=recieved_msg
             )
@@ -87,8 +97,6 @@ class QueryHandler:
 
     def handle_dp_query(self, buffer, *args, **kwargs):
 
-        print("WITH LOVE FROM DP")
-
         data = kwargs["data"]
         query = kwargs["query"]
 
@@ -108,6 +116,22 @@ class QueryHandler:
         )
 
         buffer.append(query)
+
+        """for item in self.owner.temp_graph:
+            print("Graph ITEM: ", item)
+
+            if item not in self.owner.graph.keys():
+
+                self.owner.graph[item] = False
+
+            else:
+
+                self.owner.graph[item] = True
+
+        print("\n")
+        print("BUFFER: ", self.owner.graph)
+        print("\n")"""
+
         n = Node(query, parents=buffer)
         # print("\n")
         # print("\n")
@@ -153,46 +177,25 @@ class QueryHandler:
         )
 
         buffer.append("init")
+
+        for item in self.owner.temp_graph:
+
+            print("GRAPH ITEM: ", item)
+
+            if item not in self.owner.graph.keys():
+
+                self.owner.graph[item] = False
+
+            else:
+
+                self.owner.graph[item] = True
+
+        # self.owner.graph[sent_pt.id]=Node("init",parents=[])
+        print("\n")
+        print("BUFFER: ", self.owner.graph)
+        print("\n")
+
         self.owner.buffer[sent_pt.id] = Node("init", parents=buffer)
-        self.owner.objects[sent_pt.id] = result
-
-        sent_msg = Message(
-            self.owner.name,
-            "",
-            "resultant_pointer",
-            "pointer",
-            data=sent_pt,
-            extra={"name": self.owner.name, "id": sent_pt.id},
-        )
-
-        return sent_msg
-
-    def sample_synthetic(self, buffer, *args, **kwargs):
-
-        recieved_msg = kwargs["recieved_msg"]
-
-        recieved_data = self.owner.objects[recieved_msg.id]
-
-        syntheticdata = SyntheticData(
-            recieved_data, 0.4, self.owner.categorical, self.owner.candidate
-        )
-
-        result = syntheticdata.fit()
-
-        sent_pt = Pointer(
-            self.owner,
-            self.name,
-            self.host,
-            self.port,
-            data=result,
-            child=dir(result),
-            data_type=type(result),
-            additional_data={"name": self.name},
-        )
-
-        buffer.append("sample_synthetic")
-        n = Node("sample_synthetic", parents=buffer)
-        self.owner.buffer[sent_pt.id] = n
         self.owner.objects[sent_pt.id] = result
 
         sent_msg = Message(
@@ -283,6 +286,23 @@ class QueryHandler:
 
         buffer.append("store")
         self.owner.objects[sent_pt.id] = result
+
+        for item in self.owner.temp_graph:
+
+            print("GRAPH ITEM: ", item)
+
+            if item not in self.owner.graph.keys():
+
+                self.owner.graph[item] = False
+
+            else:
+
+                self.owner.graph[item] = True
+
+        print("\n")
+        print("BUFFER: ", self.owner.graph)
+        print("\n")
+
         self.owner.buffer[sent_pt.id] = Node("store", parents=buffer)
 
         sent_msg = Message(
@@ -398,6 +418,22 @@ class QueryHandler:
         )
 
         buffer.append(query)
+
+        """for item in self.owner.temp_graph:
+
+            print("GRAPH ITEM: ", item)
+
+            if item not in self.owner.graph.keys():
+
+                self.owner.graph[item] = False
+
+            else:
+
+                self.owner.graph[item] = True"""
+
+        print("\n")
+        print("BUFFER: ", self.owner.graph)
+        print("\n")
         n = Node(query, parents=buffer)
         # print("\n")
         # print("\n")

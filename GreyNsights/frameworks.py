@@ -3,12 +3,11 @@ import sys
 import pickle
 import socket
 import random
+from .generic import Message
+from .analyst import Pointer
 import pandas
 import matplotlib
 import nltk
-
-from .generic import Message
-from .analyst import Pointer
 
 # Frameworks supported by GreyNsights
 framework_support = {"pandas": pandas, "matplotlib": matplotlib, "nltk": nltk}
@@ -24,8 +23,11 @@ class SupportQueries:
             "describe",
             "std",
             "value_counts",
-            "sample_synthetic" "median",
+            "sample_synthetic",
+            "median",
             "count",
+            "min",
+            "max",
         ]
 
 

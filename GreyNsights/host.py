@@ -1,32 +1,20 @@
 import socket
 import pickle
 import dill
+from types import ModuleType
+import pandas
 
 from .utils import log_message
 from .QueryEngine import QueryEngine
 from .analyst import Pointer
 from .generic import Message
-from types import ModuleType
-import pandas
 from .frameworks import framework_support
 from .handler import QueryHandler
 from .graph import Node
-from .synthetic import SyntheticData
 from .reporter import DPReporter
-
-
-class SyntheticDataset:
-    def __init__(self, path, epsilon=1.0, categorical=None, candidate_keys=None):
-
-        self.syntheticdata = SyntheticData(path, epsilon, categorical, candidate_keys)
-
-    def random(self):
-
-        return self.syntheticdata.random()
-
-    def fit(self):
-
-        return self.syntheticdata.fit()
+from .mpc import gen_shares
+from .analyst import Command
+from .utils import send_msg, recv_msg, encode_msg
 
 
 class DataOwner:
@@ -71,6 +59,7 @@ class Dataset:
         owner: DataOwner,
         name: str,
         data,
+        config,
         whitelist: dict = None,
         permission="AGGREGATE-ONLY",
         categorical=None,
@@ -83,21 +72,39 @@ class Dataset:
 
         else:
 
-            print(name)
             raise TypeError
 
         self.owner = DataOwner(owner.name, owner.port, owner.host, "copy")
+
+        self.shares = {}
+        self.config = config
         self.host = owner.host
         self.port = owner.port
         self.data = data
         self.whitelist = whitelist
         self.buffer = {}
+        self.temp_graph = []
+        self.graph = {}
         self.temp_buffer = []
         self.objects = {}
         self.permission = permission
         self.categorical = (categorical,)
         self.candidate = candidate
-        self.dp_reporter = DPReporter(0.1, 0.7)
+        self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
+        self.mpc_shares = {}
+
+        if config.dataset_name != self.name and config.owner_name != owner.name:
+
+            print("Config Rejected")
+            print(self.name)
+            print(owner.name)
+
+        if self.config.private_columns != "None":
+
+            print("Private COlumns Exist")
+            print(config.private_columns)
+            self.data = self.data.drop(config.private_columns, axis=1)
+
         owner.register_obj(name, self)
 
     def register_obj(self, name, obj):
@@ -296,8 +303,67 @@ class Dataset:
 
     def __setitem__(self, recieved_msg):
         data = self.objects[recieved_msg.id]
+        print(recieved_msg.key_attr["key"])
+        print(recieved_msg.key_attr["newvalue"])
         data[recieved_msg.key_attr["key"]] = recieved_msg.key_attr["newvalue"]
         return self.operate("setitem", data)
+
+    def register_share(self, recieved_msg):
+
+        self.mpc_shares[recieved_msg.name] = recieved_msg.mpc_share
+
+        sent_msg = Message(
+            self.owner.name,
+            "",
+            "resultant_pointer",
+            "pointer",
+            data=None,
+            extra={"name": self.owner.name},
+        )
+
+        return sent_msg
+
+    def create_shares(self, recieved_msg):
+
+        data = self.objects[recieved_msg.id]
+        workers = recieved_msg.key_attr["distributed_workers"]
+        generated_shares = gen_shares(data, len(workers))
+
+        idx = 0
+
+        for worker in workers.keys():
+
+            if workers[worker]["port"] != self.port:
+
+                additional_data = {
+                    "name": self.name,
+                    "mpc_share": generated_shares[idx],
+                }
+
+                cmd = Command(
+                    workers[worker]["host"],
+                    workers[worker]["port"],
+                    "register_share",
+                    additional_data=additional_data,
+                )
+
+                msg = cmd.execute("register_share")
+                idx += 1
+
+            else:
+
+                self.mpc_shares[self.name] = generated_shares[idx]
+                idx += 1
+        sent_msg = Message(
+            self.owner.name,
+            "",
+            "resultant_pointer",
+            "pointer",
+            data=None,
+            extra={"name": self.owner.name},
+        )
+
+        return sent_msg
 
     def replace_pt_with_data(self, recieved_msg):
         """Given the arguments passed as pointers with Message pointers , the message pointers will be
@@ -311,12 +377,16 @@ class Dataset:
         new_args = []
         new_kwargs = {}
 
+        print(recieved_msg.attr)
+        print(recieved_msg.key_attr)
+
         for i in recieved_msg.attr:
 
             if type(i) == Message and i.msg_type == "Pointer":
 
                 new_args.append(self.objects[i.data])
                 self.temp_buffer.append(self.buffer[i.data])
+                # elf.temp_graph.append(i.data)
 
             else:
 
@@ -331,6 +401,7 @@ class Dataset:
 
                 new_kwargs[j] = self.objects[recieved_msg.key_attr[j].data]
                 self.temp_buffer.append(self.buffer[recieved_msg.key_attr[j].data])
+                # self.temp_graph.append(j.data)
 
             else:
 
@@ -340,6 +411,34 @@ class Dataset:
         recieved_msg.key_attr = new_kwargs
 
         return recieved_msg
+
+    def get_shares(self, recieved_msg):
+
+        sent_msg = Message(
+            self.owner.name,
+            "",
+            "mpc_shares",
+            "mpc_shares",
+            data=self.mpc_shares,
+            extra={"name": self.owner.name},
+        )
+
+        self.mpc_shares = {}
+
+        return sent_msg
+
+    def get_config(self, recieved_msg):
+
+        sent_msg = Message(
+            self.owner.name,
+            "",
+            "mpc_shares",
+            "mpc_shares",
+            data=self.config,
+            extra={"name": self.owner.name},
+        )
+
+        return sent_msg
 
     def listen(self):
         """Listens for queries and requests from analyst and executes the queries. The queries are either directly sent or processed by QueryEngine."""
@@ -375,7 +474,29 @@ class Dataset:
             )
             log_message("Dataset Name", self.name)
 
-            recieved_msg = dill.loads(conn.recv(120000000))
+            recieved_msg = conn.recv(1200000)
+            recieved_msg = dill.loads(recieved_msg)
+
+            """Recieved a message"
+            msg_len = conn.recv(4)
+            print(msg_len)
+            msg_len = int(msg_len.decode())
+
+            print("MSG LEN: ", msg_len)
+
+            msg_array = "".encode()
+
+            rcv_len = 0
+            while rcv_len <= msg_len:
+
+                msg_array += conn.recv(12000)
+                rcv_len += 1
+                print("WAIT")
+
+            # data=recv_msg(s)
+            recieved_msg = dill.loads(msg_array)"""
+
+            self.temp_graph = []
 
             if type(recieved_msg) != Message:
 
@@ -395,6 +516,12 @@ class Dataset:
 
                 data = self.objects[recieved_msg.id]
                 query = recieved_msg.data
+
+                self.temp_graph.append([recieved_msg.id, recieved_msg.data])
+                print("TEMP GRAPH: ", self.temp_graph)
+
+                print("RECIEVED ID: ", recieved_msg.id)
+
                 for item in self.buffer[recieved_msg.id].parents:
 
                     self.temp_buffer.append(item)
@@ -408,6 +535,7 @@ class Dataset:
 
             internal_queries = {
                 "__getitem__": self.__getitem__,
+                "__setitem__": self.__setitem__,
                 "__add__": self.__add__,
                 "__sub__": self.__sub__,
                 "__mul__": self.__mul__,
@@ -418,7 +546,10 @@ class Dataset:
                 "__gt__": self.__gt__,
                 "__lt__": self.__lt__,
                 "__lte__": self.__lte__,
-                "__setitem__": self.__setitem__,
+                "register_share": self.register_share,
+                "create_shares": self.create_shares,
+                "get_config": self.get_config,
+                "get_shares": self.get_shares,
             }
 
             if type(query) == str and (query in internal_queries.keys()):
@@ -436,8 +567,20 @@ class Dataset:
             # Sends pickled message
             if type(sent_msg) == Message:
 
+                # send_msg(conn,dill.dumps(sent_msg))
                 conn.sendall(dill.dumps(sent_msg))
+
+                """encoded_msg = encode_msg(dill.dumps(sent_msg))
+                conn.sendall(str(len(encoded_msg)).encode())
+
+                for i in range(0, len(encoded_msg)):
+
+                    print(i)
+
+                    conn.sendall(encoded_msg[i])
+                    print("HAPPENDING")"""
 
             else:
 
+                print(sent_msg)
                 raise TypeError
