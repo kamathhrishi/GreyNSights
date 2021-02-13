@@ -7,9 +7,16 @@
 The three major principles behind the library:
 
 * No raw data is exposed only aggregates 
-* The aggregates or analysis does not leak any information about individual rows 
-* Pandas capabilities to transform and process datasets is still preserved
 
+The analyst can query and transform the dataset however they would want to , but can only get the aggregate results back. 
+
+* The aggregates or analysis does not leak any information about individual rows 
+
+The aggregate results are differentially private securing data rows from differencing attacks. 
+
+* Pandas capabilities to transform and process datasets is still preserved 
+
+The analyst might have to add a few lines of code for initializing the setup with dataowner , but they would essentially use the same pandas syntax ensuring anybody who already knows pandas could use without having to learn anything more. 
 
 ## Installation 
 
