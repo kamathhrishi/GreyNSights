@@ -1,0 +1,1 @@
+This depicts the usage of Differential Privacy in GreyNSights. The example reproduces the <a href="https://github.com/OpenMined/PyDP/tree/dev/examples/Tutorial_1-carrots_demo">official example</a> of base DP package PyDP. 
