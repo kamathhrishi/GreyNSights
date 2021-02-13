@@ -9,8 +9,6 @@ from GreyNsights.config import Config
 from GreyNsights.host import Dataset, DataOwner
 
 dataset = pandas.read_csv("US_Accidents_June20.csv")
-# syndata = SyntheticData(dataset, 0.4)
-# gen_data = syndata.fit()
 
 owner = DataOwner("Bob", port=65441, host="127.0.0.1")
 
