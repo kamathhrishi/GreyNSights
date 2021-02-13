@@ -17,4 +17,3 @@ config.load("test_config.yaml")
 
 dataset = Dataset(owner, "Sample Data", dataset, config, whitelist={"Alice": None})
 dataset.listen()
-

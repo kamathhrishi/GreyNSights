@@ -17,5 +17,5 @@ owner = DataOwner("Bob", port=6544, host="127.0.0.1")
 config = Config(owner)
 config.load("test_config.yaml")
 
-dataset = Dataset(owner, "Sample Data", dataset,config, whitelist={"Alice": None})
+dataset = Dataset(owner, "Sample Data", dataset, config, whitelist={"Alice": None})
 dataset.listen()
