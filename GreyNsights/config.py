@@ -51,16 +51,16 @@ class Config:
 
             string += "\t" + "-" + self.file["visible_columns"][i]
             string += "\n"
-        
-        string += "restricted_columns: " 
+
+        string += "restricted_columns: "
         string += "\n"
         string += "\n"
         for i in range(0, len(self.file["restricted_columns"])):
 
             string += "\t" + "-" + self.file["restricted_columns"][i]
             string += "\n"
-        
-        string += "allowed_queries: " 
+
+        string += "allowed_queries: "
         string += "\n"
         string += "\n"
         for i in range(0, len(self.file["restricted_columns"])):
@@ -74,7 +74,7 @@ class Config:
 
             string += "\t" + "-" + self.file["restricted_columns"][i]
             string += "\n"
-        
+
         string += "visible_queries: "
         string += "\n"
         string += "\n"
@@ -83,7 +83,7 @@ class Config:
             string += "\t" + "-" + self.file["visible_queries"][i]
             string += "\n"
 
-        string += "restricted_queries: " 
+        string += "restricted_queries: "
         string += "\n"
         string += "\n"
         for i in range(0, len(self.file["restricted_queries"])):
