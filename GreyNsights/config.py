@@ -46,20 +46,50 @@ class Config:
 
         string += "visible_columns: "
         string += "\n"
-        string += "restricted_columns: " + self.file["restricted_columns"]
         string += "\n"
-        string += "allowed_queries: " + self.file["allowed_queries"]
+        for i in range(0, len(self.file["visible_columns"])):
+
+            string += "\t" + "-" + self.file["visible_columns"][i]
+            string += "\n"
+        
+        string += "restricted_columns: " 
         string += "\n"
+        string += "\n"
+        for i in range(0, len(self.file["restricted_columns"])):
+
+            string += "\t" + "-" + self.file["restricted_columns"][i]
+            string += "\n"
+        
+        string += "allowed_queries: " 
+        string += "\n"
+        string += "\n"
+        for i in range(0, len(self.file["restricted_columns"])):
+
+            string += "\t" + "-" + self.file["restricted_columns"][i]
+            string += "\n"
+        string += "restricted_columns: "
+        string += "\n"
+        string += "\n"
+        for i in range(0, len(self.file["restricted_columns"])):
+
+            string += "\t" + "-" + self.file["restricted_columns"][i]
+            string += "\n"
+        
         string += "visible_queries: "
+        string += "\n"
         string += "\n"
         for i in range(0, len(self.file["visible_queries"])):
 
             string += "\t" + "-" + self.file["visible_queries"][i]
             string += "\n"
 
-        string += "restricted_queries: " + self.file["restricted_queries"]
+        string += "restricted_queries: " 
         string += "\n"
         string += "\n"
+        for i in range(0, len(self.file["restricted_queries"])):
+
+            string += "\t" + "-" + self.file["restricted_queries"][i]
+            string += "\n"
 
         return string
 

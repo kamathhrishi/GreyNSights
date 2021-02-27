@@ -99,7 +99,7 @@ class Dataset:
             print(self.name)
             print(owner.name)
 
-        if self.config.private_columns != "None":
+        if self.config.private_columns != ['None']:
 
             print("Private COlumns Exist")
             print(config.private_columns)
