@@ -21,6 +21,14 @@ The three major principles behind the library:
   The analyst might have to add a few lines of code for initializing the setup with dataowner , but they would essentially use the same pandas syntax ensuring   
   anybody who already knows pandas could use without having to learn anything more. 
 
+
+
+## Usage 
+
+1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accdidents example</a> provides examples of how range of queries could be performed using GreyNSights 
+2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analyticals</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average , std and counts. 
+
+
 ## Installation 
 
 1. Clone the repository 
