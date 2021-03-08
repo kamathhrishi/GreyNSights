@@ -6,6 +6,7 @@ __pycache__/
 # C extensions
 *.so
 .DS_Store
+examples/Accidents/US_Accidents_June20.csv
 
 # Distribution / packaging
 .Python
