@@ -21,7 +21,48 @@ The three major principles behind the library:
   The analyst might have to add a few lines of code for initializing the setup with dataowner , but they would essentially use the same pandas syntax ensuring   
   anybody who already knows pandas could use without having to learn anything more. 
 
+## Example
 
+Analysis using GreyNSights
+
+```python
+
+#Initilization code of GreyNSights
+import GreyNsights
+from GreyNsights.analyst import DataWorker, DataSource, Pointer, Command, Analyst
+from GreyNsights.frameworks import framework
+
+identity = Analyst("Alice", port=65441, host="127.0.0.1")
+worker = DataWorker(port=6544, host="127.0.0.1")
+dataset = DataSource(identity,worker, "Sample Data")
+config = dataset.get_config()
+
+#Initialization Pointer
+dataset_pt = config.approve().init_pointer()
+
+#Analysis of dataset
+df = pandas.DataFrame(dataset_pt)
+df.columns
+df.describe().get()
+df['carrots_eaten'].mean().get()
+df['carrots_eaten'].sum().get()
+(df['carrots_eaten']>70).sum().get()
+df['carrots_eaten'].max().get()
+```
+
+Analysis using Pandas 
+
+```python
+dataset=pd.read_csv(<PATH>)
+
+df = pandas.DataFrame(dataset)
+df.columns
+df.describe().get()
+df['carrots_eaten'].mean()
+df['carrots_eaten'].sum()
+(df['carrots_eaten']>70).sum()
+df['carrots_eaten'].max()
+```
 
 ## Usage 
 
