@@ -20,6 +20,11 @@ The three major principles behind the library:
 
   The analyst might have to add a few lines of code for initializing the setup with dataowner , but they would essentially use the same pandas syntax ensuring   
   anybody who already knows pandas could use without having to learn anything more. 
+  
+## Examples
+
+1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights 
+2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average , std and counts. 
 
 ## Usage
 
@@ -63,11 +68,6 @@ df['carrots_eaten'].sum()
 (df['carrots_eaten']>70).sum()
 df['carrots_eaten'].max()
 ```
-
-## Examples
-
-1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights 
-2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average , std and counts. 
 
 
 ## Installation 
