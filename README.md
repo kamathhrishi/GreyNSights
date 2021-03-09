@@ -35,7 +35,13 @@ The three major principles behind the library:
 3. Install the library from source 
 
    ``` python3 setup.py install ```
+   
+   
+## Workflow Diagram
 
+<div style="text-align:center">
+<img height="500px" widht="500px" src="https://github.com/kamathhrishi/GreyNSights/blob/main/images/High%20Level%20Diagram1.png?raw=true"></img>
+</div>
 
 ## Usage
 
