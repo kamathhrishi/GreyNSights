@@ -40,7 +40,7 @@ The three major principles behind the library:
 ## Workflow Diagram
 
 <div style="text-align:center">
-<img height="500px" widht="500px" src="https://github.com/kamathhrishi/GreyNSights/blob/main/images/Screenshot%202021-03-09%20at%207.36.10%20PM.png?raw=true"></img>
+<img height="500px" widht="500px" src="https://github.com/kamathhrishi/GreyNSights/blob/main/images/High%20Level%20Diagram.png?raw=true"></img>
 </div>
 
 ## Usage
