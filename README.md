@@ -1,4 +1,5 @@
 # GreyNSights
+Privacy Preserving Pandas
 
 *The grey area between privacy and utility* 
 
