@@ -13,3 +13,6 @@ services:
 
 before_install:
   - ls
+
+script:
+  - ls
