@@ -2,6 +2,12 @@
 env:
   DOCKER_COMPOSE_VERSION: 1.23.2
 
+language:
+  python
+
+python:
+  3.8
+
 services:
   - docker
 
