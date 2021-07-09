@@ -440,6 +440,78 @@ class Dataset:
 
         return sent_msg
 
+    def handle_request(self, recieved_msg, query_handler):
+
+        self.temp_graph = []
+
+        if type(recieved_msg) != Message:
+
+            raise TypeError
+
+        # Checks if the dataset is the intended dataset. In future some sort of authentication should be present in this phase.
+
+        """if recieved_msg.name != self.name:
+
+                raise NameError("Dataset " + recieved_msg.name + " not found")
+
+        recieved_msg = recieved_msg"""
+
+        # Substitute for type of message , should be replaced by type of message in furture
+
+        if hasattr(recieved_msg, "id"):
+
+            data = self.objects[recieved_msg.id]
+            query = recieved_msg.data
+
+            self.temp_graph.append([recieved_msg.id, recieved_msg.data])
+            print("TEMP GRAPH: ", self.temp_graph)
+
+            print("RECIEVED ID: ", recieved_msg.id)
+
+            for item in self.buffer[recieved_msg.id].parents:
+
+                self.temp_buffer.append(item)
+
+        else:
+
+            data = self.data
+            query = recieved_msg.data
+
+        recieved_msg = self.replace_pt_with_data(recieved_msg)
+
+        internal_queries = {
+            "__getitem__": self.__getitem__,
+            "__setitem__": self.__setitem__,
+            "__add__": self.__add__,
+            "__sub__": self.__sub__,
+            "__mul__": self.__mul__,
+            "__truediv__": self.__truediv__,
+            "__and__": self.__and__,
+            "__or__": self.__or__,
+            "__gte__": self.__gte__,
+            "__gt__": self.__gt__,
+            "__lt__": self.__lt__,
+            "__lte__": self.__lte__,
+            "register_share": self.register_share,
+            "create_shares": self.create_shares,
+            "get_config": self.get_config,
+            "get_shares": self.get_shares,
+        }
+
+        if type(query) == str and (query in internal_queries.keys()):
+
+            sent_msg = internal_queries[query](recieved_msg=recieved_msg)
+
+        else:
+
+            sent_msg = query_handler.handle(
+                self.temp_buffer, recieved_msg=recieved_msg, data=data, query=query
+            )
+
+            self.temp_buffer = []
+
+        return sent_msg
+
     def listen(self):
         """Listens for queries and requests from analyst and executes the queries. The queries are either directly sent or processed by QueryEngine."""
 
@@ -477,92 +549,7 @@ class Dataset:
             recieved_msg = conn.recv(1200000)
             recieved_msg = dill.loads(recieved_msg)
 
-            """Recieved a message"
-            msg_len = conn.recv(4)
-            print(msg_len)
-            msg_len = int(msg_len.decode())
-
-            print("MSG LEN: ", msg_len)
-
-            msg_array = "".encode()
-
-            rcv_len = 0
-            while rcv_len <= msg_len:
-
-                msg_array += conn.recv(12000)
-                rcv_len += 1
-                print("WAIT")
-
-            # data=recv_msg(s)
-            recieved_msg = dill.loads(msg_array)"""
-
-            self.temp_graph = []
-
-            if type(recieved_msg) != Message:
-
-                raise TypeError
-
-            # Checks if the dataset is the intended dataset. In future some sort of authentication should be present in this phase.
-
-            """if recieved_msg.name != self.name:
-
-                raise NameError("Dataset " + recieved_msg.name + " not found")
-
-            recieved_msg = recieved_msg"""
-
-            # Substitute for type of message , should be replaced by type of message in furture
-
-            if hasattr(recieved_msg, "id"):
-
-                data = self.objects[recieved_msg.id]
-                query = recieved_msg.data
-
-                self.temp_graph.append([recieved_msg.id, recieved_msg.data])
-                print("TEMP GRAPH: ", self.temp_graph)
-
-                print("RECIEVED ID: ", recieved_msg.id)
-
-                for item in self.buffer[recieved_msg.id].parents:
-
-                    self.temp_buffer.append(item)
-
-            else:
-
-                data = self.data
-                query = recieved_msg.data
-
-            recieved_msg = self.replace_pt_with_data(recieved_msg)
-
-            internal_queries = {
-                "__getitem__": self.__getitem__,
-                "__setitem__": self.__setitem__,
-                "__add__": self.__add__,
-                "__sub__": self.__sub__,
-                "__mul__": self.__mul__,
-                "__truediv__": self.__truediv__,
-                "__and__": self.__and__,
-                "__or__": self.__or__,
-                "__gte__": self.__gte__,
-                "__gt__": self.__gt__,
-                "__lt__": self.__lt__,
-                "__lte__": self.__lte__,
-                "register_share": self.register_share,
-                "create_shares": self.create_shares,
-                "get_config": self.get_config,
-                "get_shares": self.get_shares,
-            }
-
-            if type(query) == str and (query in internal_queries.keys()):
-
-                sent_msg = internal_queries[query](recieved_msg=recieved_msg)
-
-            else:
-
-                sent_msg = query_handler.handle(
-                    self.temp_buffer, recieved_msg=recieved_msg, data=data, query=query
-                )
-
-            self.temp_buffer = []
+            sent_msg = self.handle_request(recieved_msg, query_handler)
 
             # Sends pickled message
             if type(sent_msg) == Message:
@@ -582,5 +569,4 @@ class Dataset:
 
             else:
 
-                print(sent_msg)
                 raise TypeError

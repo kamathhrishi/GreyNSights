@@ -448,14 +448,11 @@ class Command:
         self.cmd_type = cmd_type
         self.additional_data = additional_data
 
-    def execute(self, command, *args, **kwargs):
-        """Executes a given command.
+    def execute_virtual():
 
-        Args:
-            command[str]: The command to be executed
-            Additional arguments follow
-        Returns:
-            data: The data recieved from dataowner upon a given operation"""
+        pass
+
+    def execute_remote(self, command, *args, **kwargs):
 
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((self.host, self.port))
@@ -517,6 +514,26 @@ class Command:
             else:
 
                 raise TypeError
+
+    def execute(self, command, *args, **kwargs):
+        """Executes a given command.
+
+        Args:
+            command[str]: The command to be executed
+            Additional arguments follow
+        Returns:
+            data: The data recieved from dataowner upon a given operation"""
+
+        if self.host and self.port:
+            return self.execute_remote(command, *args, **kwargs)
+
+        elif (not self.host) and (not self.port):
+            return self.execute_remote(command, *args, **kwargs)
+
+        else:
+            raise TypeError(
+                "port and host need to be speccified for remote execution or None of them for virtual. "
+            )
 
     def hook_method(self, *args, **kwargs):
         """Hook method is the method that is substituted for frameworks original function.
@@ -586,6 +603,27 @@ class DataWorker:
         self.data = data
 
 
+class VirtualWorker:
+    """A class which represents the operations which respect to dataworkers.
+
+    Args:
+        host[str]: Host of given dataworker
+        port[int]: Port of the dataworker
+        data: No idea why this exists"""
+
+    def __init__(
+        self,
+        name: str,
+        host: str,
+        port: int,
+        data=None,
+    ):
+        self.name = name
+        self.port = port
+        self.host = host
+        self.data = data
+
+
 class DataSource:
     """Establishes a connection with the dataset hosted by the datasource.
 
@@ -595,6 +633,7 @@ class DataSource:
 
     def __init__(self, analyst, worker: DataWorker, name: str):
 
+        self.virtual = isinstance(worker, VirtualWorker)
         self.owner = worker
         self.name = name
         self.additional_data = {"name": name, "sender": analyst.name}
@@ -605,16 +644,29 @@ class DataSource:
         Returns:
             returned_pt[Pointer]: The returned pointer"""
 
-        cmd = Command(
-            self.owner.host,
-            self.owner.port,
-            "init_query",
-            additional_data=self.additional_data,
-        )
-        returned_msg = cmd.execute("init")
-        returned_pt = returned_msg.data
-        returned_pt.hook()
-        return returned_pt
+        if not self.virtual:
+            cmd = Command(
+                self.owner.host,
+                self.owner.port,
+                "init_query",
+                additional_data=self.additional_data,
+            )
+            returned_msg = cmd.execute("init")
+            returned_pt = returned_msg.data
+            returned_pt.hook()
+            return returned_pt
+
+        else:
+            cmd = Command(
+                None,
+                None,
+                "init_query",
+                additional_data=self.additional_data,
+            )
+            returned_msg = cmd.execute("init")
+            returned_pt = returned_msg.data
+            returned_pt.hook()
+            return returned_pt
 
     def get_config(self):
         """Initialized pointer from the hosted dataset.
