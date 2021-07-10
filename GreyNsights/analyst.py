@@ -61,6 +61,10 @@ class Pointer:
         # self.owner = owner
         self.dataset = dataset
         self.chain = chain
+        self.virtual_worker = None
+
+        if isinstance(owner, VirtualWorker):
+            self.virtual_worker = owner
 
         if owner == DataOwner:
 
@@ -138,9 +142,16 @@ class Pointer:
         string += "\n"
         string += "\t \t id" + ":" + str(self.id)
         string += "\n"
-        string += "\t \t port" + ":" + str(self.port)
+        if self.port:
+            string += "\t \t port" + ":" + str(self.port)
+        else:
+            string += "\t \t port" + ":" + " None"
+
         string += "\n"
-        string += "\t \t host" + ":" + self.host
+        if self.host:
+            string += "\t \t host" + ":" + self.host
+        else:
+            string += "\t \t host" + ":" + " None"
         string += "\n"
 
         return string
@@ -167,7 +178,11 @@ class Pointer:
                 self.additional_data["id"] = self.id
 
                 cmd = Command(
-                    self.host, self.port, "query", additional_data=self.additional_data
+                    self.host,
+                    self.port,
+                    "query",
+                    additional_data=self.additional_data,
+                    virtual_worker=self.virtual_worker,
                 )
                 setattr(cmd, "name", function)
                 setattr(cmd, "port", self.port)
@@ -185,7 +200,11 @@ class Pointer:
                 self.additional_data["id"] = self.id
 
                 cmd = Command(
-                    self.host, self.port, "query", additional_data=self.additional_data
+                    self.host,
+                    self.port,
+                    "query",
+                    additional_data=self.additional_data,
+                    virtual_worker=self.virtual_worker,
                 )
                 setattr(cmd, "name", function)
                 setattr(cmd, "port", self.port)
@@ -203,7 +222,11 @@ class Pointer:
                 self.additional_data["id"] = self.id
 
                 cmd = Command(
-                    self.host, self.port, "query", additional_data=self.additional_data
+                    self.host,
+                    self.port,
+                    "query",
+                    additional_data=self.additional_data,
+                    virtual_worker=self.virtual_worker,
                 )
                 setattr(cmd, "name", function)
                 setattr(cmd, "port", self.port)
@@ -235,6 +258,7 @@ class Pointer:
                         "pt_id1": self.id,
                         "pt_id2": x.id,
                     },
+                    virtual_worker=self.virtual_worker,
                 )
                 return_msg = command.execute(cmd)
                 return_pt = return_msg.data
@@ -252,6 +276,7 @@ class Pointer:
                 self.port,
                 cmd,
                 additional_data={"name": self.dataset, "pt_id1": self.id, "x": x},
+                virtual_worker=self.virtual_worker,
             )
             return_msg = command.execute(cmd)
             return_pt = return_msg.data
@@ -313,14 +338,22 @@ class Pointer:
     def create_shares(self, workers):
 
         cmd = Command(
-            self.host, self.port, "create_shares", additional_data=self.additional_data
+            self.host,
+            self.port,
+            "create_shares",
+            additional_data=self.additional_data,
+            virtual_worker=self.virtual_worker,
         )
         cmd.execute("create_shares", distributed_workers=workers)
 
     def __setitem__(self, key, newvalue):
 
         cmd = Command(
-            self.host, self.port, "__setitem__", additional_data=self.additional_data
+            self.host,
+            self.port,
+            "__setitem__",
+            additional_data=self.additional_data,
+            virtual_worker=self.virtual_worker,
         )
 
         if type(newvalue) == type(self):
@@ -349,7 +382,11 @@ class Pointer:
     def __getitem__(self, idx):
 
         cmd = Command(
-            self.host, self.port, "__getitem__", additional_data=self.additional_data
+            self.host,
+            self.port,
+            "__getitem__",
+            additional_data=self.additional_data,
+            virtual_worker=self.virtual_worker,
         )
 
         if type(idx) == type(self):
@@ -396,7 +433,13 @@ class Pointer:
 
         additional_data = Pt1.additional_data
         additional_data["id"] = Pt1.id
-        cmd = Command(Pt1.host, Pt1.port, "get", additional_data=additional_data)
+        cmd = Command(
+            Pt1.host,
+            Pt1.port,
+            "get",
+            additional_data=additional_data,
+            virtual_worker=self.virtual_worker,
+        )
         return_msg = cmd.execute("get")
         return_data = return_msg.data
 
@@ -408,7 +451,11 @@ class Pointer:
         additional_data["name"] = self.name
         additional_data["id"] = self.id
         cmd = Command(
-            self.host, self.port, "sample_synthetic", additional_data=additional_data
+            self.host,
+            self.port,
+            "sample_synthetic",
+            additional_data=additional_data,
+            virtual_worker=self.virtual_worker,
         )
         return_msg = cmd.execute("sample_synthetic")
         return_pt = return_msg.data
@@ -418,7 +465,11 @@ class Pointer:
     def get_shares(self, workers):
 
         cmd = Command(
-            self.host, self.port, "get_shares", additional_data=self.additional_data
+            self.host,
+            self.port,
+            "get_shares",
+            additional_data=self.additional_data,
+            virtual_worker=self.virtual_worker,
         )
         return_msg = cmd.execute("get_shares", distributed_workers=workers)
         return_pt = return_msg.data
@@ -439,18 +490,48 @@ class Command:
     """
 
     def __init__(
-        self, host: str, port: int, cmd_type: int, data="", additional_data: dict = {}
+        self,
+        host: str,
+        port: int,
+        cmd_type: int,
+        data="",
+        additional_data: dict = {},
+        virtual_worker=None,
     ):
 
+        self.virtual_worker = virtual_worker
         self.port = port
         self.data = data
         self.host = host
         self.cmd_type = cmd_type
         self.additional_data = additional_data
 
-    def execute_virtual():
+    def execute_virtual(self, command, *args, **kwargs):
 
-        pass
+        msg = Message(
+            self.additional_data["name"],
+            "",
+            self.cmd_type,
+            "command",
+            attr=args,
+            key_attr=kwargs,
+            data=command,
+            extra=self.additional_data,
+        )
+
+        for additional in self.additional_data.keys():
+
+            setattr(msg, additional, self.additional_data[additional])
+
+        if type(msg) == Message:
+            from .handler import QueryHandler
+
+            query_handler = QueryHandler(
+                self.virtual_worker, self.virtual_worker.name, None, None
+            )
+            return self.virtual_worker.data.local_dataset.handle_request(
+                msg, query_handler
+            )
 
     def execute_remote(self, command, *args, **kwargs):
 
@@ -524,11 +605,12 @@ class Command:
         Returns:
             data: The data recieved from dataowner upon a given operation"""
 
+        # Maybe change how this handled?
         if self.host and self.port:
             return self.execute_remote(command, *args, **kwargs)
 
         elif (not self.host) and (not self.port):
-            return self.execute_remote(command, *args, **kwargs)
+            return self.execute_virtual(command, *args, **kwargs)
 
         else:
             raise TypeError(
@@ -611,17 +693,47 @@ class VirtualWorker:
         port[int]: Port of the dataworker
         data: No idea why this exists"""
 
-    def __init__(
-        self,
-        name: str,
-        host: str,
-        port: int,
-        data=None,
-    ):
+    def __init__(self, name: str, config, data=None, object_type: str = "original"):
+
+        from .host import Dataset
+        from .reporter import DPReporter
+
         self.name = name
-        self.port = port
-        self.host = host
-        self.data = data
+        self.port = None
+        self.host = None
+        self.config = config
+        self.type = object_type
+        self.objects = {}
+        # Make this private type
+        self.type = object_type
+        self.objects = {}
+        self.temp_graph = {}
+        self.graph = {}
+        self.buffer = {}
+        self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
+
+        self.permission = "AGGREGATE-ONLY"
+
+        dataset = Dataset(self, "sample data", data, self.config, None)
+        self.data = DataSource(
+            Analyst("Alice", port=65442, host="127.0.0.1"),
+            self,
+            self.name,
+            local_dataset=dataset,
+        )
+
+    def register_obj(self, name, obj):
+        self.objects[name] = obj
+
+    def __str__(self):
+
+        string = ""
+        string += "\n"
+        string += "Pointer"
+        string += f"Name: {self.name}"
+        string += "\n"
+
+        return string
 
 
 class DataSource:
@@ -631,12 +743,13 @@ class DataSource:
         worker[DataWorker]: The host of datasource
         name[str]: Name of dataset"""
 
-    def __init__(self, analyst, worker: DataWorker, name: str):
+    def __init__(self, analyst, worker: DataWorker, name: str, local_dataset=None):
 
         self.virtual = isinstance(worker, VirtualWorker)
         self.owner = worker
         self.name = name
         self.additional_data = {"name": name, "sender": analyst.name}
+        self.local_dataset = local_dataset
 
     def init_pointer(self):
         """Initialized pointer from the hosted dataset.
@@ -662,6 +775,7 @@ class DataSource:
                 None,
                 "init_query",
                 additional_data=self.additional_data,
+                virtual_worker=self.owner,
             )
             returned_msg = cmd.execute("init")
             returned_pt = returned_msg.data

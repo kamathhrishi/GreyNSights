@@ -74,7 +74,11 @@ class Dataset:
 
             raise TypeError
 
-        self.owner = DataOwner(owner.name, owner.port, owner.host, "copy")
+        if isinstance(owner, DataOwner):
+            self.owner = DataOwner(owner.name, owner.port, owner.host, "copy")
+
+        else:
+            self.owner = owner
 
         self.shares = {}
         self.config = config
@@ -297,12 +301,20 @@ class Dataset:
         return self.operate("gt", result)
 
     def __getitem__(self, recieved_msg: Message):
-        data = self.objects[recieved_msg.id]
+
+        try:
+            data = self.objects[recieved_msg.id]
+        except KeyError:
+            data = self.owner.objects[recieved_msg.id]
+
         data = data[recieved_msg.key_attr["idx"]]
         return self.operate("getitem", data)
 
     def __setitem__(self, recieved_msg):
-        data = self.objects[recieved_msg.id]
+        try:
+            data = self.objects[recieved_msg.id]
+        except KeyError:
+            data = self.owner.objects[recieved_msg.id]
         print(recieved_msg.key_attr["key"])
         print(recieved_msg.key_attr["newvalue"])
         data[recieved_msg.key_attr["key"]] = recieved_msg.key_attr["newvalue"]
@@ -325,7 +337,11 @@ class Dataset:
 
     def create_shares(self, recieved_msg):
 
-        data = self.objects[recieved_msg.id]
+        try:
+            data = self.objects[recieved_msg.id]
+        except KeyError:
+            data = self.owner.objects[recieved_msg.id]
+
         workers = recieved_msg.key_attr["distributed_workers"]
         generated_shares = gen_shares(data, len(workers))
 
@@ -460,17 +476,18 @@ class Dataset:
 
         if hasattr(recieved_msg, "id"):
 
-            data = self.objects[recieved_msg.id]
+            try:
+                data = self.objects[recieved_msg.id]
+            except KeyError:
+                data = self.owner.objects[recieved_msg.id]
+
             query = recieved_msg.data
 
             self.temp_graph.append([recieved_msg.id, recieved_msg.data])
-            print("TEMP GRAPH: ", self.temp_graph)
 
-            print("RECIEVED ID: ", recieved_msg.id)
-
-            for item in self.buffer[recieved_msg.id].parents:
-
-                self.temp_buffer.append(item)
+            """for item in self.buffer[recieved_msg.id].parents:
+                print("HMMMM")
+                self.temp_buffer.append(item)"""
 
         else:
 

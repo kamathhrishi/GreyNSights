@@ -3,13 +3,19 @@ from .analyst import Command
 
 
 class Config:
-    def __init__(self, owner):
+    def __init__(self, owner=None):
 
         self.file = None
         self.approval = None
-        self.name = owner.name
-        self.host = owner.host
-        self.port = owner.port
+
+        if owner:
+            self.name = owner.name
+            self.host = owner.host
+            self.port = owner.port
+        else:
+            self.name = None
+            self.host = None
+            self.port = None
 
     def load(self, path):
 
@@ -116,7 +122,6 @@ class Config:
             return returned_pt
 
         else:
-
             raise Exception("LOL")
 
     def approve(self):

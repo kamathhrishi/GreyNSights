@@ -198,6 +198,10 @@ class QueryHandler:
         self.owner.buffer[sent_pt.id] = Node("init", parents=buffer)
         self.owner.objects[sent_pt.id] = result
 
+        print("\n")
+        print(self.owner)
+        print("Owner: ", self.owner.objects)
+
         sent_msg = Message(
             self.owner.name,
             "",
