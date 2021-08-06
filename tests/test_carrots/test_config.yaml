@@ -1,6 +1,6 @@
 owner_name: Bob 
 dataset_name: Sample Data
-privacy_budget: 10.0
+privacy_budget: None
 trusted_aggregator: None
 secret_sharing: Shamirs_scheme
 
