@@ -9,3 +9,8 @@ before_install:
 
 script:
   - pytest .
+
+addons:
+  apt:
+    packages:
+      - docker-ce
