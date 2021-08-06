@@ -4,6 +4,8 @@ python:
   - "3.9"
 # command to install dependencies
 install:
+  - apt-get update
+  - apt-get install libstdc++6
   - pip install -r requirements.txt
   - python3 setup.py install
 # command to run tests
