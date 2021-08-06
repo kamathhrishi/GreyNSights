@@ -48,7 +48,7 @@ The three major principles behind the library:
 
 ## Usage
 
-Analysis using GreyNSights
+Analysis using GreyNSights hosted remotely. 
 
 ```python
 
