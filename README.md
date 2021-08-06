@@ -94,3 +94,7 @@ df['carrots_eaten'].max()
 1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights 
 2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average, std and counts. 
 
+
+## Contributing
+
+There are several ways you could possibly contribute. I haven't put them as issues yet. If you would be interested in contributing, write to me at kamathhrishi@gmail.com. 
