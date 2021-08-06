@@ -97,4 +97,5 @@ df['carrots_eaten'].max()
 
 ## Contributing
 
-There are several ways you could possibly contribute. I haven't put them as issues yet. If you would be interested in contributing, write to me at kamathhrishi@gmail.com. 
+There are several ways you could possibly contribute. I haven't put them as issues yet.
+If you would be interested in contributing, write to me at kamathhrishi@gmail.com. 
