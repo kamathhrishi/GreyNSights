@@ -1,22 +1,11 @@
 language: python
-python:
-  - "3.8"
-  - "3.9"
-# command to install dependencies
-install:
-  - sudo apt-get -y update
-  - sudo apt-get clean
-  - sudo apt-get purge mysql*
-  - sudo apt-get -y update
-  - sudo apt-get install -f
-  - sudo apt-get -y install mysql-server-5.7
-  - sudo apt-get -y dist-upgrade
-  #- sudo apt-get -y upgrade
-  - sudo apt-get install -y build-essential
-  - sudo apt-get install gcc-4.9
-  - sudo apt-get upgrade libstdc++6
-  - pip install -r requirements.txt
-  - python3 setup.py install
-# command to run tests
+
+services:
+  - docker
+
+before_install:
+  - docker build -t greynsights -f docker-images/base/Dockerfile .
+  - docker run greynsights
+
 script:
-  - pytest 
+  - pytest .
