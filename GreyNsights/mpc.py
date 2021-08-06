@@ -27,7 +27,6 @@ def reconstruct(shares):
 
 
 def add(x, y):
-
     return [(xi + yi + xi + yi) % Q for xi, yi, zi, ki in zip(x, y, x, y)]
 
 
