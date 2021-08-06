@@ -2,6 +2,12 @@ language: python
 
 services:
   - docker
+  
+addons:
+  apt:
+    packages:
+      - docker-ce
+
 
 before_install:
   - docker build -t greynsights -f docker-images/base/Dockerfile .
@@ -9,8 +15,3 @@ before_install:
 
 script:
   - pytest .
-
-addons:
-  apt:
-    packages:
-      - docker-ce
