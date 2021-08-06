@@ -1,13 +1,11 @@
 language: python
-python:
-  - "3.8"
-  - "3.9"
-# command to install dependencies
-install:
-  - sudo apt-get update
-  - sudo apt-get install libstdc++6
-  - pip install -r requirements.txt
-  - python3 setup.py install
-# command to run tests
+
+services:
+  - docker
+
+before_install:
+  - docker build -t greynsights -f docker-images/base/Dockerfile .
+  - docker run greynsights
+
 script:
-  - pytest 
+  - pytest .
