@@ -1,3 +1,4 @@
 pandas==1.2.3
 dill==0.3.3
 python-dp
+matplotlib
