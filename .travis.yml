@@ -5,7 +5,7 @@ python:
 # command to install dependencies
 install:
   - sudo apt-get -y update
-  - sudo apt-get -y upgrade
+  #- sudo apt-get -y upgrade
   - sudo apt-get install -y build-essential
   - sudo apt-get install gcc-4.9
   - sudo apt-get upgrade libstdc++6
