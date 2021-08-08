@@ -1,4 +1,4 @@
-pandas==1.2.3
+pandas
 dill==0.3.3
 python-dp==1.0.0
 matplotlib
