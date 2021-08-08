@@ -4,6 +4,20 @@ python:
   - "3.9"
 # command to install dependencies
 install:
+  - RUN apt-get update && \
+    apt-get -y install \
+    sudo \
+    wget \
+    zip \
+    git \
+    software-properties-common \
+    gcc \
+    g++ \
+    clang-format \
+    build-essential \
+    python3-distutils \
+    pkg-config \
+    zlib1g-dev
   - pip install -r requirements.txt
   - python3 setup.py install
 # command to run tests
