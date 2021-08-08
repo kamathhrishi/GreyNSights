@@ -21,8 +21,8 @@ RUN apt -y update
 RUN apt -y upgrade
 
 RUN add-apt-repository ppa:ubuntu-toolchain-r/test
-RUN apt -y install gcc-9
-RUN apt -y install libstdc++6
+RUN apt-get -y install gcc-9
+RUN apt-get -y install libstdc++6
 RUN apt-get -y upgrade libstdc++6
 
 RUN python3.9 -m pip install --upgrade pip
