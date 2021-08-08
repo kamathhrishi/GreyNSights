@@ -1,12 +1,26 @@
 FROM ubuntu:18.04
 
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install git clang build-essential
-RUN apt-get -y install software-properties-common
-RUN apt-get -y install python3.7
-RUN apt-get -y install python3-pip
+ARG PYTHON_VERSION=3.9
+FROM python:${PYTHON_VERSION}-slim-buster
 
-RUN python3.7 -m pip install --upgrade pip
+# Install apt-get packages
+RUN apt-get update && \
+    apt-get -y install \
+    sudo \
+    wget \
+    zip \
+    git \
+    software-properties-common \
+    gcc \
+    g++ \
+    clang-format \
+    build-essential \
+    python3-distutils \
+    pkg-config \
+    zlib1g-dev
+    
+
+RUN python3.9 -m pip install --upgrade pip
 RUN apt-get -y upgrade libstdc++6
 
 COPY ./ GreyNSights
