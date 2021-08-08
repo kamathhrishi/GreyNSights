@@ -17,9 +17,13 @@ RUN apt-get update && \
     pkg-config \
     zlib1g-dev
     
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
+RUN apt -y update
+RUN apt -y install gcc-9
+RUN apt -y install libstdc++6
+RUN apt-get -y upgrade libstdc++6
 
 RUN python3.9 -m pip install --upgrade pip
-RUN apt-get -y upgrade libstdc++6
 
 COPY ./ GreyNSights
 
