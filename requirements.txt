@@ -1,6 +1,6 @@
 pandas
 dill==0.3.3
-python-dp==1.0.0
+python-dp==1.1.0
 matplotlib
 nltk
 pytest
