@@ -17,10 +17,9 @@ RUN apt-get update && \
     pkg-config \
     zlib1g-dev
     
+RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 RUN apt -y update
 RUN apt -y upgrade
-
-RUN add-apt-repository ppa:ubuntu-toolchain-r/test
 RUN apt-get -y install gcc-9
 RUN apt-get -y install libstdc++6
 RUN apt-get -y upgrade libstdc++6
