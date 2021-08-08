@@ -14,6 +14,6 @@ COPY ./ GreyNSights
 WORKDIR GreyNSights
 
 RUN pip3 install -r requirements.txt
-RUN pip3 install -e .
+RUN python3 setup.py install
 
 ENTRYPOINT [ "/bin/bash" ]
