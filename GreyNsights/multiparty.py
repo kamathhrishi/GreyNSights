@@ -2,7 +2,8 @@ import random
 
 from .mpc import reconstruct
 from .analyst import Command, Message, Pointer
-from .federated import query
+
+# from .federated import query
 
 
 class SharedPointer:
@@ -91,7 +92,12 @@ class SharedPointer:
 
         elif secret_sharing == "None":
             result = cmd.execute("get", workers=workers)
-            return sum(result.items())
+            res = 0.0
+
+            for i in result.keys():
+                res += result[i]
+
+            return res
 
     def operate(self, cmd: str, x=None):
         """Execute a given arithmetic/logical operation by sending a command across.
