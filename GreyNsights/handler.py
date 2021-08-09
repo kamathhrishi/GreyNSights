@@ -59,11 +59,14 @@ class QueryHandler:
         if (
             type(query) == str
             and query in self.dp_queries
-            and self.owner.config.privacy_budget != "None"
+            and self.owner.dp_reporter != None
         ):
 
             print("\n")
             print("Does this satisfy?")
+            print("\n")
+            print("\n")
+            print(self.owner.dp_reporter)
             print("\n")
             sent_msg = self.handle_dp_query(
                 buffer, data=data, query=query, recieved_msg=recieved_msg

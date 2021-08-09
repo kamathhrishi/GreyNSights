@@ -90,7 +90,13 @@ class Dataset:
         self.temp_buffer = []
         self.objects = {}
         self.permission = permission
-        self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
+        if config.privacy_budget != "None":
+            from .reporter import DPReporter
+
+            self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
+        else:
+            self.dp_reporter = None
+
         self.mpc_shares = {}
 
         if config.dataset_name != self.name and config.owner_name != owner.name:

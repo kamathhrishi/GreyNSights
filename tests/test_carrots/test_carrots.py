@@ -3,7 +3,7 @@ import codecs
 import pickle
 import pandas
 import random
-from GreyNsights.analyst import VirtualWorker
+from GreyNsights.data_client import VirtualWorker
 from GreyNsights.host import Dataset, DataOwner
 from GreyNsights.config import Config
 
