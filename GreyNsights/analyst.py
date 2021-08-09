@@ -54,7 +54,7 @@ class Pointer:
         child=None,
     ):
 
-        # Use __ to make attributes private
+        # Use __ to keep attributes private
 
         from .host import DataOwner
 
@@ -107,6 +107,7 @@ class Pointer:
 
         self.additional_data = additional_data
         self.overloaded_func = {"get": self.get_data}
+
         self.properties = {
             "columns": self.columns_init,
             "shape": self.shape_init,
@@ -728,7 +729,7 @@ class DataSource:
         return returned_pt
 
     def send(self, obj):
-        """Send across data to the given dataset
+        """Send data across data to the given dataset
 
         Args:
             obj: A python object

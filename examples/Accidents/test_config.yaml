@@ -4,11 +4,11 @@ privacy_budget: 10.0
 trusted_aggregator: None
 secret_sharing: Shamirs_scheme
 
-private_columns: [None]
-visible_columns: [default]
-restricted_columns: [default]
+private_columns: None
+visible_columns: default
+restricted_columns: default
 
-allowed_queries: [default]
+allowed_queries: default
 visible_queries: 
       - sum
       - count
@@ -17,4 +17,4 @@ visible_queries:
       - max
       - min 
       - median
-restricted_queries: [None]
+restricted_queries: None

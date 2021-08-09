@@ -62,8 +62,6 @@ class Dataset:
         config,
         whitelist: dict = None,
         permission="AGGREGATE-ONLY",
-        categorical=None,
-        candidate=None,
     ):
 
         if type(name) == str:
@@ -92,8 +90,6 @@ class Dataset:
         self.temp_buffer = []
         self.objects = {}
         self.permission = permission
-        self.categorical = (categorical,)
-        self.candidate = candidate
         self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
         self.mpc_shares = {}
 
@@ -156,151 +152,7 @@ class Dataset:
 
         return sent_msg
 
-    def __add__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] + recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] + self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("add", result)
-
-    def __sub__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] - recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] - self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate(result)
-
-    def __mul__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] * recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] * self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("sub", result)
-
-    def __truediv__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] / recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] / self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("truediv", result)
-
-    def __and__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] & recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] & self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("and", result)
-
-    def __or__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] | recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] | self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("or", result)
-
-    def __invert__(self, recieved_msg: Message):
-
-        result = self.objects[recieved_msg.pt_id1]
-        return self.operate("invert", result)
-
-    def __lt__(self, recieved_msg):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] < recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] < self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("lt", result)
-
-    def __lte__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] <= recieved_msg.x
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] <= self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("lte", result)
-
-    def __gte__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] >= recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] >= self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("gte", result)
-
-    def __gt__(self, recieved_msg: Message):
-
-        if hasattr(recieved_msg, "x"):
-
-            result = self.objects[recieved_msg.pt_id1] > recieved_msg.x
-
-        else:
-
-            result = (
-                self.objects[recieved_msg.pt_id1] > self.objects[recieved_msg.pt_id2]
-            )
-
-        return self.operate("gt", result)
-
-    def __getitem__(self, recieved_msg: Message):
+    def __getitem__(self, recieved_msg: Message, query=None):
 
         try:
             data = self.objects[recieved_msg.id]
@@ -310,17 +162,16 @@ class Dataset:
         data = data[recieved_msg.key_attr["idx"]]
         return self.operate("getitem", data)
 
-    def __setitem__(self, recieved_msg):
+    def __setitem__(self, recieved_msg, query=None):
         try:
             data = self.objects[recieved_msg.id]
         except KeyError:
             data = self.owner.objects[recieved_msg.id]
-        print(recieved_msg.key_attr["key"])
-        print(recieved_msg.key_attr["newvalue"])
+
         data[recieved_msg.key_attr["key"]] = recieved_msg.key_attr["newvalue"]
         return self.operate("setitem", data)
 
-    def register_share(self, recieved_msg):
+    def register_share(self, recieved_msg, query=None):
 
         self.mpc_shares[recieved_msg.name] = recieved_msg.mpc_share
 
@@ -335,7 +186,7 @@ class Dataset:
 
         return sent_msg
 
-    def create_shares(self, recieved_msg):
+    def create_shares(self, recieved_msg, query=None):
 
         try:
             data = self.objects[recieved_msg.id]
@@ -348,7 +199,6 @@ class Dataset:
         idx = 0
 
         for worker in workers.keys():
-
             if workers[worker]["port"] != self.port:
 
                 additional_data = {
@@ -362,14 +212,13 @@ class Dataset:
                     "register_share",
                     additional_data=additional_data,
                 )
-
-                msg = cmd.execute("register_share")
-                idx += 1
+                cmd.execute("register_share")
 
             else:
-
                 self.mpc_shares[self.name] = generated_shares[idx]
-                idx += 1
+
+            idx += 1
+
         sent_msg = Message(
             self.owner.name,
             "",
@@ -393,34 +242,24 @@ class Dataset:
         new_args = []
         new_kwargs = {}
 
-        print(recieved_msg.attr)
-        print(recieved_msg.key_attr)
-
         for i in recieved_msg.attr:
-
             if type(i) == Message and i.msg_type == "Pointer":
-
                 new_args.append(self.objects[i.data])
                 self.temp_buffer.append(self.buffer[i.data])
                 # elf.temp_graph.append(i.data)
 
             else:
-
                 new_args.append(i)
 
         for j in recieved_msg.key_attr.keys():
-
             if (
                 type(recieved_msg.key_attr[j]) == Message
                 and recieved_msg.key_attr[j].msg_type == "Pointer"
             ):
-
                 new_kwargs[j] = self.objects[recieved_msg.key_attr[j].data]
                 self.temp_buffer.append(self.buffer[recieved_msg.key_attr[j].data])
                 # self.temp_graph.append(j.data)
-
             else:
-
                 new_kwargs[j] = recieved_msg.key_attr[j]
 
         recieved_msg.attr = new_args
@@ -428,7 +267,7 @@ class Dataset:
 
         return recieved_msg
 
-    def get_shares(self, recieved_msg):
+    def get_shares(self, recieved_msg, query=None):
 
         sent_msg = Message(
             self.owner.name,
@@ -443,7 +282,7 @@ class Dataset:
 
         return sent_msg
 
-    def get_config(self, recieved_msg):
+    def get_config(self, recieved_msg, query=None):
 
         sent_msg = Message(
             self.owner.name,
@@ -456,6 +295,22 @@ class Dataset:
 
         return sent_msg
 
+    def exec_operation(self, recieved_msg, query=None):
+
+        import operator
+
+        op_str = query.replace("_", "")
+        op = getattr(operator, query)
+
+        if hasattr(recieved_msg, "x"):
+            result = op(self.objects[recieved_msg.pt_id1], recieved_msg.x)
+        else:
+            result = op(
+                self.objects[recieved_msg.pt_id1], self.objects[recieved_msg.pt_id2]
+            )
+
+        return self.operate(op_str, result)
+
     def handle_request(self, recieved_msg, query_handler):
 
         self.temp_graph = []
@@ -465,7 +320,6 @@ class Dataset:
             raise TypeError
 
         # Checks if the dataset is the intended dataset. In future some sort of authentication should be present in this phase.
-
         """if recieved_msg.name != self.name:
 
                 raise NameError("Dataset " + recieved_msg.name + " not found")
@@ -473,24 +327,16 @@ class Dataset:
         recieved_msg = recieved_msg"""
 
         # Substitute for type of message , should be replaced by type of message in furture
-
         if hasattr(recieved_msg, "id"):
-
             try:
                 data = self.objects[recieved_msg.id]
             except KeyError:
                 data = self.owner.objects[recieved_msg.id]
 
             query = recieved_msg.data
-
             self.temp_graph.append([recieved_msg.id, recieved_msg.data])
 
-            """for item in self.buffer[recieved_msg.id].parents:
-                print("HMMMM")
-                self.temp_buffer.append(item)"""
-
         else:
-
             data = self.data
             query = recieved_msg.data
 
@@ -499,16 +345,16 @@ class Dataset:
         internal_queries = {
             "__getitem__": self.__getitem__,
             "__setitem__": self.__setitem__,
-            "__add__": self.__add__,
-            "__sub__": self.__sub__,
-            "__mul__": self.__mul__,
-            "__truediv__": self.__truediv__,
-            "__and__": self.__and__,
-            "__or__": self.__or__,
-            "__gte__": self.__gte__,
-            "__gt__": self.__gt__,
-            "__lt__": self.__lt__,
-            "__lte__": self.__lte__,
+            "__add__": self.exec_operation,
+            "__sub__": self.exec_operation,
+            "__mul__": self.exec_operation,
+            "__truediv__": self.exec_operation,
+            "__and__": self.exec_operation,
+            "__or__": self.exec_operation,
+            "__gte__": self.exec_operation,
+            "__gt__": self.exec_operation,
+            "__lt__": self.exec_operation,
+            "__lte__": self.exec_operation,
             "register_share": self.register_share,
             "create_shares": self.create_shares,
             "get_config": self.get_config,
@@ -516,15 +362,12 @@ class Dataset:
         }
 
         if type(query) == str and (query in internal_queries.keys()):
-
-            sent_msg = internal_queries[query](recieved_msg=recieved_msg)
+            sent_msg = internal_queries[query](recieved_msg=recieved_msg, query=query)
 
         else:
-
             sent_msg = query_handler.handle(
                 self.temp_buffer, recieved_msg=recieved_msg, data=data, query=query
             )
-
             self.temp_buffer = []
 
         return sent_msg
@@ -550,11 +393,8 @@ class Dataset:
 
         # Continiously listens until terminated
         while True:
-
             # Waits until a request is present
-
             conn, address = s.accept()
-
             query_handler = QueryHandler(self, self.name, self.host, self.port)
 
             log_message(
@@ -570,20 +410,7 @@ class Dataset:
 
             # Sends pickled message
             if type(sent_msg) == Message:
-
                 # send_msg(conn,dill.dumps(sent_msg))
                 conn.sendall(dill.dumps(sent_msg))
-
-                """encoded_msg = encode_msg(dill.dumps(sent_msg))
-                conn.sendall(str(len(encoded_msg)).encode())
-
-                for i in range(0, len(encoded_msg)):
-
-                    print(i)
-
-                    conn.sendall(encoded_msg[i])
-                    print("HAPPENDING")"""
-
             else:
-
-                raise TypeError
+                raise TypeError(f"{type(sent_msg)} is not valid type for message")
