@@ -2,8 +2,27 @@ import random
 
 Q = 100103036233
 
+
+def encode(x, base=2, precision=16):
+    scale = base ** precision
+    return x * scale
+
+
+def decode(x, base=2, precision=16):
+    correction = x < 0
+    scale = base ** precision
+    dividend = x // scale - correction
+    remainder = x % scale
+    remainder += (remainder == 0) * scale * correction
+
+    tensor = dividend + remainder / scale
+    return tensor
+
+
 # Add fixed precision with a larger Prime number
 def gen_shares(x, n):
+
+    x = encode(x)
 
     shares = [random.randrange(Q) for worker in range(0, n - 1)]
 
@@ -17,7 +36,7 @@ def gen_shares(x, n):
 
 
 def reconstruct(shares):
-    return sum(shares) % Q
+    return decode(sum(shares) % Q)
 
 
 def add(x, y):

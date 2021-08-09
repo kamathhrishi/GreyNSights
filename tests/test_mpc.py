@@ -2,7 +2,7 @@
 import pytest
 
 # lib dependencies
-from GreyNsights.mpc import gen_shares, reconstruct
+from GreyNsights.mpc import gen_shares, reconstruct, encode, decode
 
 
 @pytest.mark.parametrize("n_clients", [2, 3, 5])
@@ -24,3 +24,13 @@ def test_share_addition(n_clients):
     result = [shares1[index] + shares2[index] for index in range(0, len(shares1))]
 
     assert reconstruct(result) == (secret1 + secret2)
+
+
+def test_encode_decode():
+
+    x = 10.43434
+
+    encoded = encode(x)
+    decoded = decode(encoded)
+
+    assert decoded == x
