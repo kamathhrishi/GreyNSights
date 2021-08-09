@@ -11,7 +11,6 @@ from .generic import Message
 from .frameworks import framework_support
 from .handler import QueryHandler
 from .graph import Node
-from .reporter import DPReporter
 from .mpc import gen_shares
 from .analyst import Command
 from .utils import send_msg, recv_msg, encode_msg
@@ -92,7 +91,6 @@ class Dataset:
         self.permission = permission
         if config.privacy_budget != "None":
             from .reporter import DPReporter
-
             self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
         else:
             self.dp_reporter = None
