@@ -2,11 +2,27 @@ language: python
 python:
   - "3.8"
   - "3.9"
+  
+#python:
+#  - "3.8"
+#  - "3.9"
 # command to install dependencies
-install:
-  - pip install -r requirements.txt
-  - ls
-  - python3 setup.py install 
+#install:
+#  - pip install -r requirements.txt
+#  - ls
+#  - python3 setup.py install 
 # command to run tests
-script:
-  - pytest
+#script:
+#  - pytest
+
+jobs:
+  include:
+    - stage: "Build"                # naming the Tests stage
+      name: "Build it"            # names the first Tests stage job
+      script: 
+         - pip install -r requirements.txt
+         - python3 setup.py install 
+    - stage: tests
+      name: "Unit tests"
+      script: 
+         - pytest 
