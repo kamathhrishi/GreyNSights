@@ -31,7 +31,6 @@ class VirtualWorker:
     def __init__(self, name: str, config, data=None, object_type: str = "original"):
 
         from .host import Dataset
-        from .reporter import DPReporter
 
         self.name = name
         self.port = None
