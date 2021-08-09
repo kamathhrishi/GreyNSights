@@ -1,7 +1,7 @@
 import random
 
 # Use larger Prime number
-Q = 100103036233
+Q = 6497992661811505123
 
 
 def encode(x, base=2, precision=32):
