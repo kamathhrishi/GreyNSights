@@ -17,7 +17,6 @@ def init_pointer():
     config = Config()
     config.load(config_path)
     owner = VirtualWorker("Bob", config, data=dataset)
-    # owner = DataOwner("Bob", port=None, host=None,data=dataset)
 
     init_pointer = owner.data.init_pointer()
 
