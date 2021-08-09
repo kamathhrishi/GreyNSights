@@ -1,5 +1,6 @@
 import socket
 import codecs
+import os
 import pickle
 import pandas
 import random
@@ -10,12 +11,15 @@ from GreyNsights.config import Config
 
 def test_example():
 
+    data_path = os.path.join(os.path.dirname(__file__),  "animals_and_carrots.csv")
+    config_path =  os.path.join(os.path.dirname(__file__), "test_config.yaml")
+    
     dataset = pandas.read_csv(
-        "animals_and_carrots.csv", sep=",", names=["animal", "carrots_eaten"]
+        data_path, sep=",", names=["animal", "carrots_eaten"]
     )
 
     config = Config()
-    config.load("test_config.yaml")
+    config.load(config_path)
     owner = VirtualWorker("Bob", config, data=dataset)
     # owner = DataOwner("Bob", port=None, host=None,data=dataset)
 
