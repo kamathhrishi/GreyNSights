@@ -2,23 +2,17 @@ import random
 
 Q = 100103036233
 
-
+# Add fixed precision with a larger Prime number
 def gen_shares(x, n):
 
-    shares = []
-
-    for worker in range(0, n - 1):
-
-        shares.append(random.randrange(Q))
+    shares = [random.randrange(Q) for worker in range(0, n - 1)]
 
     partial = 0
 
     for share in shares:
-
         partial += share
 
     shares.append((x - partial) % Q)
-
     return shares
 
 
