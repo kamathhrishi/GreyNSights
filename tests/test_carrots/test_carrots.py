@@ -11,12 +11,10 @@ from GreyNsights.config import Config
 
 def test_example():
 
-    data_path = os.path.join(os.path.dirname(__file__),  "animals_and_carrots.csv")
-    config_path =  os.path.join(os.path.dirname(__file__), "test_config.yaml")
-    
-    dataset = pandas.read_csv(
-        data_path, sep=",", names=["animal", "carrots_eaten"]
-    )
+    data_path = os.path.join(os.path.dirname(__file__), "animals_and_carrots.csv")
+    config_path = os.path.join(os.path.dirname(__file__), "test_config.yaml")
+
+    dataset = pandas.read_csv(data_path, sep=",", names=["animal", "carrots_eaten"])
 
     config = Config()
     config.load(config_path)

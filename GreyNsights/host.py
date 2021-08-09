@@ -91,6 +91,7 @@ class Dataset:
         self.permission = permission
         if config.privacy_budget != "None":
             from .reporter import DPReporter
+
             self.dp_reporter = DPReporter(config.privacy_budget, 0.7)
         else:
             self.dp_reporter = None
