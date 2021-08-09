@@ -20,7 +20,7 @@ class Config:
     def load(self, path):
 
         fp = open(path, "r")
-        self.file = yaml.load(fp)
+        self.file = yaml.load(fp,Loader=yaml.FullLoader)
 
         for value in self.file.keys():
 
