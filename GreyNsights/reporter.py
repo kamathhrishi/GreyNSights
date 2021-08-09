@@ -1,4 +1,3 @@
-import pydp as dp  # our privacy library
 from pydp.algorithms.laplacian import (
     BoundedSum,
     BoundedMean,
@@ -8,8 +7,6 @@ from pydp.algorithms.laplacian import (
     Percentile,
     Median,
 )
-import pandas as pd
-import numpy as np
 import numpy
 
 

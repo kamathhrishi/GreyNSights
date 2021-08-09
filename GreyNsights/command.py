@@ -1,6 +1,11 @@
-from .generic import Message, PrivateDataAccess
+# python depedencies
 import socket
+
+# third-paty dependencies
 import dill
+
+# lib dependencies
+from .generic import Message
 
 
 class Command:

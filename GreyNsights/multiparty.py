@@ -1,5 +1,7 @@
+# python depedencies
 import random
 
+# lib dependencies
 from .mpc import reconstruct
 from .analyst import Command, Message, Pointer
 
