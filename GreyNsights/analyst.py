@@ -411,6 +411,7 @@ class Pointer:
         return return_data
 
     def sample_synthetic(self):
+        """
         additional_data = {}
         additional_data["name"] = self.name
         additional_data["id"] = self.id
@@ -425,6 +426,10 @@ class Pointer:
         return_pt = return_msg.data
         return_pt.hook()
         return return_pt
+        """
+        raise NotImplementedError(
+            "Sampling synthetic datasets is not currently available."
+        )
 
     def get_shares(self, workers):
         cmd = Command(

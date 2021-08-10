@@ -38,7 +38,7 @@ pt = group.init_pointer()
 # Perform queries on all three workers together
 er = pt["Money spent (euros)"].sum() + pt["Money spent (euros)"].sum()
 
-"""Workers communicate with each other and create shares. 
+"""Workers communicate with each other and create shares.
 these exchanged shares are added by the analyst to obtain the summation of shares
 which can be divided to obtain the average
 #(Secure Aggregation)"""

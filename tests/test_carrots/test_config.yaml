@@ -1,4 +1,4 @@
-owner_name: Bob 
+owner_name: Bob
 dataset_name: Sample Data
 privacy_budget: None
 trusted_aggregator: None
@@ -6,15 +6,15 @@ secret_sharing: Shamirs_scheme
 
 private_columns: None
 visible_columns: default
-restricted_columns: default 
+restricted_columns: default
 
 allowed_queries: default
-visible_queries: 
+visible_queries:
       - sum
       - count
       - mean
       - percentile
       - max
-      - min 
+      - min
       - median
 restricted_queries: None

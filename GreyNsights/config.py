@@ -45,57 +45,67 @@ class Config:
         string += "private_columns: "
         string += "\n"
         string += "\n"
-        for i in range(0, len(self.file["private_columns"])):
 
-            string += "\t" + "-" + self.file["private_columns"][i]
-            string += "\n"
+        if self.file["private_columns"] != "None":
+
+            for i in range(0, len(self.file["private_columns"])):
+
+                string += "\t" + "-" + self.file["private_columns"][i]
+                string += "\n"
 
         string += "visible_columns: "
         string += "\n"
         string += "\n"
-        for i in range(0, len(self.file["visible_columns"])):
 
-            string += "\t" + "-" + self.file["visible_columns"][i]
-            string += "\n"
+        if self.file["visible_columns"] != "default":
+
+            for i in range(0, len(self.file["visible_columns"])):
+
+                string += "\t" + "-" + self.file["visible_columns"][i]
+                string += "\n"
 
         string += "restricted_columns: "
         string += "\n"
         string += "\n"
-        for i in range(0, len(self.file["restricted_columns"])):
 
-            string += "\t" + "-" + self.file["restricted_columns"][i]
-            string += "\n"
+        if self.file["restricted_columns"] != "None":
+
+            for i in range(0, len(self.file["restricted_columns"])):
+
+                string += "\t" + "-" + self.file["restricted_columns"][i]
+                string += "\n"
 
         string += "allowed_queries: "
         string += "\n"
         string += "\n"
-        for i in range(0, len(self.file["restricted_columns"])):
 
-            string += "\t" + "-" + self.file["restricted_columns"][i]
-            string += "\n"
-        string += "restricted_columns: "
-        string += "\n"
-        string += "\n"
-        for i in range(0, len(self.file["restricted_columns"])):
+        if self.file["allowed_queries"] != "default":
 
-            string += "\t" + "-" + self.file["restricted_columns"][i]
-            string += "\n"
+            for i in range(0, len(self.file["allowed_queries"])):
+
+                string += "\t" + "-" + self.file["allowed_queries"][i]
+                string += "\n"
 
         string += "visible_queries: "
         string += "\n"
         string += "\n"
-        for i in range(0, len(self.file["visible_queries"])):
 
-            string += "\t" + "-" + self.file["visible_queries"][i]
-            string += "\n"
+        if self.file["visible_queries"] != "None":
+            for i in range(0, len(self.file["visible_queries"])):
+
+                string += "\t" + "-" + self.file["visible_queries"][i]
+                string += "\n"
 
         string += "restricted_queries: "
         string += "\n"
         string += "\n"
-        for i in range(0, len(self.file["restricted_queries"])):
 
-            string += "\t" + "-" + self.file["restricted_queries"][i]
-            string += "\n"
+        if self.file["restricted_queries"] != "None":
+
+            for i in range(0, len(self.file["restricted_queries"])):
+
+                string += "\t" + "-" + self.file["restricted_queries"][i]
+                string += "\n"
 
         return string
 

@@ -1,6 +1,6 @@
 # GreyNSights
 
-*The grey area between privacy and utility* 
+*The grey area between privacy and utility*
 
 <a href="https://kamathhrishi.github.io/MyWebsite/jekyll/update/2021/02/22/Privatepandas.html">Introductory Blogpost</a>
 
@@ -13,33 +13,33 @@ The three major principles behind the library:
 
 * <b>No raw data is exposed only aggregates</b>
 
-  The analyst can query and transform the dataset however they would want to, but can only get the aggregate results back. 
+  The analyst can query and transform the dataset however they would want to, but can only get the aggregate results back.
 
 * <b>The aggregates or analysis does not leak any information about individual rows</b>
 
-   The aggregate results are differentially private securing data rows from differencing attacks. 
+   The aggregate results are differentially private securing data rows from differencing attacks.
 
 * <b>Pandas capabilities to transform and process datasets is still preserved</b>
 
-  The analyst might have to add a few lines of code for initializing the setup with dataowner, but they would essentially use the same pandas syntax ensuring   
-  anybody who already knows pandas could use without having to learn anything more. 
-  
+  The analyst might have to add a few lines of code for initializing the setup with dataowner, but they would essentially use the same pandas syntax ensuring
+  anybody who already knows pandas could use without having to learn anything more.
 
-## Installation 
 
-1. Clone the repository 
+## Installation
+
+1. Clone the repository
 
    ``` https://github.com/kamathhrishi/GreyNSights.git ```
 
-2. Install the required packages 
+2. Install the required packages
 
    ``` pip install requirements.txt ```
 
-3. Install the library from source 
+3. Install the library from source
 
    ``` python3 setup.py install ```
-   
-   
+
+
 ## Workflow Diagram
 
 <div style="text-align:center">
@@ -48,7 +48,7 @@ The three major principles behind the library:
 
 ## Usage
 
-Analysis using GreyNSights hosted remotely. 
+Analysis using GreyNSights hosted remotely.
 
 ```python
 
@@ -75,7 +75,7 @@ df['carrots_eaten'].sum().get()
 df['carrots_eaten'].max().get()
 ```
 
-Analysis using Pandas 
+Analysis using Pandas
 
 ```python
 dataset=pd.read_csv(<PATH>)
@@ -91,11 +91,11 @@ df['carrots_eaten'].max()
 
 ## Examples
 
-1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights 
-2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average, std and counts. 
+1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights
+2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average, std and counts.
 
 
 ## Contributing
 
 There are several ways you could possibly contribute. I haven't put them as issues yet.
-If you would be interested in contributing, write to me at kamathhrishi@gmail.com. 
+If you would be interested in contributing, write to me at kamathhrishi@gmail.com.
