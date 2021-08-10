@@ -1,13 +1,13 @@
+import numpy
 from pydp.algorithms.laplacian import (
-    BoundedSum,
     BoundedMean,
+    BoundedSum,
     Count,
     Max,
+    Median,
     Min,
     Percentile,
-    Median,
 )
-import numpy
 
 
 class DPReporter:

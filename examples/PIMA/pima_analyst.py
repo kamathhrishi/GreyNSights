@@ -1,6 +1,6 @@
-from analyst import DataWorker, DataSource, Pointer, Command, Analyst
-from frameworks import framework
 import numpy as np
+from analyst import Analyst, Command, DataSource, DataWorker, Pointer
+from frameworks import framework
 
 frameworks = framework()
 

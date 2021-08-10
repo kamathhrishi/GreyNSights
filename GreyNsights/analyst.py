@@ -53,8 +53,8 @@ class Pointer:
 
         # Use __ to keep attributes private
 
-        from .host import DataOwner
         from .client import VirtualWorker
+        from .host import DataOwner
 
         # self.owner = owner
         self.dataset = dataset

@@ -4,14 +4,14 @@ import socket
 # third-paty dependencies
 import dill
 
+from .analyst import Command, Pointer
+from .generic import Message
+from .graph import Node
+from .handler import QueryHandler
+from .mpc import gen_shares
+
 # lib dependencies
 from .utils import log_message
-from .analyst import Pointer
-from .generic import Message
-from .handler import QueryHandler
-from .graph import Node
-from .mpc import gen_shares
-from .analyst import Command
 
 
 class DataOwner:

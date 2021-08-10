@@ -1,11 +1,13 @@
-import socket
 import codecs
 import pickle
-import pandas
 import random
-from GreyNsights.config import Config
+import socket
+
+import pandas
+
 from GreyNsights.analyst import Pointer
-from GreyNsights.host import Dataset, DataOwner
+from GreyNsights.config import Config
+from GreyNsights.host import DataOwner, Dataset
 
 
 def run():

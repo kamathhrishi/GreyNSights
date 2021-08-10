@@ -1,9 +1,10 @@
 # python depedencies
 import random
 
+from .analyst import Command, Message, Pointer
+
 # lib dependencies
 from .mpc import reconstruct
-from .analyst import Command, Message, Pointer
 
 # from .federated import query
 

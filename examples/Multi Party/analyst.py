@@ -1,7 +1,7 @@
-from GreyNsights.client import DataWorker, DataSource
 from GreyNsights.analyst import Analyst
-from GreyNsights.multiparty import WorkerGroup
+from GreyNsights.client import DataSource, DataWorker
 from GreyNsights.frameworks import framework
+from GreyNsights.multiparty import WorkerGroup
 
 frameworks = framework()
 

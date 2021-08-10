@@ -1,13 +1,14 @@
 # python depedencies
 from types import ModuleType
 
+from .analyst import Pointer
+from .frameworks import framework_support
+from .generic import Message
+from .graph import Node, validate
+from .QueryEngine import QueryEngine
+
 # lib dependencies
 from .utils import log_message
-from .QueryEngine import QueryEngine
-from .analyst import Pointer
-from .generic import Message
-from .frameworks import framework_support
-from .graph import Node, validate
 
 
 class QueryHandler:

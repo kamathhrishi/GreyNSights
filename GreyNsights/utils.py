@@ -1,6 +1,6 @@
 # python dependencies
-import pickle
 import codecs
+import pickle
 import struct
 
 

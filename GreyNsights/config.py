@@ -1,4 +1,5 @@
 import yaml
+
 from .analyst import Command
 
 

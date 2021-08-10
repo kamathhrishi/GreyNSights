@@ -1,12 +1,14 @@
-import socket
 import codecs
 import pickle
-import pandas
 import random
+import socket
+
+import pandas
+
 import GreyNsights
 from GreyNsights.analyst import Pointer
 from GreyNsights.config import Config
-from GreyNsights.host import Dataset, DataOwner
+from GreyNsights.host import DataOwner, Dataset
 
 dataset = pandas.read_csv("US_Accidents_June20.csv")
 

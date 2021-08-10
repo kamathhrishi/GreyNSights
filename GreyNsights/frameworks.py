@@ -1,12 +1,13 @@
-from types import ModuleType
 import pickle
 import socket
-from .generic import Message
-from .analyst import Pointer
+from types import ModuleType
 
-import pandas
 import matplotlib
 import nltk
+import pandas
+
+from .analyst import Pointer
+from .generic import Message
 
 # Frameworks supported by GreyNsights
 framework_support = {"pandas": pandas, "matplotlib": matplotlib, "nltk": nltk}

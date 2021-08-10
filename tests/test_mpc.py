@@ -2,7 +2,7 @@
 import pytest
 
 # lib dependencies
-from GreyNsights.mpc import gen_shares, reconstruct, encode, decode
+from GreyNsights.mpc import decode, encode, gen_shares, reconstruct
 
 
 @pytest.mark.parametrize("n_clients", [2, 3, 5])

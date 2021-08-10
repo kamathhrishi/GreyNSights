@@ -1,7 +1,7 @@
 import os
 
-import pytest
 import pandas
+import pytest
 
 from GreyNsights.client import VirtualWorker
 from GreyNsights.config import Config
