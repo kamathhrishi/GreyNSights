@@ -2,7 +2,7 @@
 
 *The grey area between privacy and utility*
 
-<a href="https://kamathhrishi.github.io/MyWebsite/jekyll/update/2021/02/22/Privatepandas.html">Introductory Blogpost</a>
+<a target="_blank"  href="https://kamathhrishi.github.io/MyWebsite/jekyll/update/2021/02/22/Privatepandas.html">Introductory Blogpost</a>
 
 <p style="text-align:justify">GreyNSights is a Framework for Privacy-Preserving Data Analysis. Currently with support only for Pandas. The framework allows analysts to remotely query a dataset such that the dataset remains at source and private to data analyst. The package offers flexbility to the analyst by ensuring that they can use the same pandas syntax for analyzing and transforming datasets, but cannot view the indiviual rows. GreyNSights also offers flexibility to query several parties together and get aggregate statistics without revealing individual counts of parties. </p>
 
@@ -91,9 +91,9 @@ df['carrots_eaten'].max()
 
 ## Examples
 
-1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights
-2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average, std and counts.
+1. <a target="_blank"  href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights
+2. <a target="_blank" href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average, std and counts.
 
 
 ## Contributing
-Read <a href="https://github.com/kamathhrishi/GreyNSights/blob/main/CONTRIBUTING.md">CONTRIBUTING</a> documentation. 
+Read <a target="_blank" href="https://github.com/kamathhrishi/GreyNSights/blob/main/CONTRIBUTING.md">CONTRIBUTING</a> documentation. 
