@@ -1,37 +1,101 @@
-## Welcome to GitHub Pages
+# GreyNSights
 
-You can use the [editor on GitHub](https://github.com/kamathhrishi/GreyNSights/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+*The grey area between privacy and utility* 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+<a href="https://kamathhrishi.github.io/MyWebsite/jekyll/update/2021/02/22/Privatepandas.html">Introductory Blogpost</a>
 
-### Markdown
+<p style="text-align:justify">GreyNSights is a Framework for Privacy-Preserving Data Analysis. Currently with support only for Pandas. The framework allows analysts to remotely query a dataset such that the dataset remains at source and private to data analyst. The package offers flexbility to the analyst by ensuring that they can use the same pandas syntax for analyzing and transforming datasets, but cannot view the indiviual rows. GreyNSights also offers flexibility to query several parties together and get aggregate statistics without revealing individual counts of parties. </p>
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+<h3>Not for production usage.</h3>
+</br>
 
-```markdown
-Syntax highlighted code block
+The three major principles behind the library:
 
-# Header 1
-## Header 2
-### Header 3
+* <b>No raw data is exposed only aggregates</b>
 
-- Bulleted
-- List
+  The analyst can query and transform the dataset however they would want to, but can only get the aggregate results back. 
 
-1. Numbered
-2. List
+* <b>The aggregates or analysis does not leak any information about individual rows</b>
 
-**Bold** and _Italic_ and `Code` text
+   The aggregate results are differentially private securing data rows from differencing attacks. 
 
-[Link](url) and ![Image](src)
+* <b>Pandas capabilities to transform and process datasets is still preserved</b>
+
+  The analyst might have to add a few lines of code for initializing the setup with dataowner, but they would essentially use the same pandas syntax ensuring   
+  anybody who already knows pandas could use without having to learn anything more. 
+  
+
+## Installation 
+
+1. Clone the repository 
+
+   ``` https://github.com/kamathhrishi/GreyNSights.git ```
+
+2. Install the required packages 
+
+   ``` pip install requirements.txt ```
+
+3. Install the library from source 
+
+   ``` python3 setup.py install ```
+   
+   
+## Workflow Diagram
+
+<div style="text-align:center">
+<img height="500px" widht="500px" src="https://github.com/kamathhrishi/GreyNSights/blob/main/images/Overall%20Diagram.png?raw=true"></img>
+</div>
+
+## Usage
+
+Analysis using GreyNSights hosted remotely. 
+
+```python
+
+#Initilization code of GreyNSights
+import GreyNsights
+from GreyNsights.analyst import DataWorker, DataSource, Pointer, Command, Analyst
+from GreyNsights.frameworks import framework
+
+identity = Analyst("Alice", port=65441, host="127.0.0.1")
+worker = DataWorker(port=6544, host="127.0.0.1")
+dataset = DataSource(identity,worker, "Sample Data")
+config = dataset.get_config()
+
+#Initialization Pointer
+dataset_pt = config.approve().init_pointer()
+
+#Analysis of dataset
+df = pandas.DataFrame(dataset_pt)
+df.columns
+df.describe().get()
+df['carrots_eaten'].mean().get()
+df['carrots_eaten'].sum().get()
+(df['carrots_eaten']>70).sum().get()
+df['carrots_eaten'].max().get()
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Analysis using Pandas 
 
-### Jekyll Themes
+```python
+dataset=pd.read_csv(<PATH>)
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/kamathhrishi/GreyNSights/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+df = pandas.DataFrame(dataset)
+df.columns
+df.describe().get()
+df['carrots_eaten'].mean()
+df['carrots_eaten'].sum()
+(df['carrots_eaten']>70).sum()
+df['carrots_eaten'].max()
+```
 
-### Support or Contact
+## Examples
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+1. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Accidents">Accidents example</a> provides examples of how range of queries could be performed and how datasets could be transformed using GreyNSights 
+2. <a href="https://github.com/kamathhrishi/GreyNSights/tree/main/examples/Multi%20Party">Federated Analytics</a> example which shows how you could analyze datasets of several parties together. This is only restricted to linear queries such as sum, average, std and counts. 
+
+
+## Contributing
+
+There are several ways you could possibly contribute. I haven't put them as issues yet.
+If you would be interested in contributing, write to me at kamathhrishi@gmail.com. 
