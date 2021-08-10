@@ -1,4 +1,5 @@
-from GreyNsights.analyst import DataWorker, DataSource, Analyst
+from GreyNsights.client import DataWorker, DataSource
+from GreyNsights.analyst import Analyst
 from GreyNsights.multiparty import WorkerGroup
 from GreyNsights.frameworks import framework
 
