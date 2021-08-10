@@ -3,7 +3,7 @@ import os
 import pytest
 import pandas
 
-from GreyNsights.data_client import VirtualWorker
+from GreyNsights.client import VirtualWorker
 from GreyNsights.config import Config
 
 
