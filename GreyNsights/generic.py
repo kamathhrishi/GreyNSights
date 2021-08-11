@@ -1,13 +1,15 @@
+"""Generic functions for GreyNSights."""
 class Message:
     """Messages are generic datatypes to exchange information between server/client
 
     Args:
-        sender_name[str]: Name of the sender
-        recieved_name[str]: name of the reciever
-        msg_type[str]: Type of message
-        dtype: Datatype of data in message
-        attr[list]: The arguments carried by message
-        key_attr[Dict]: The key word arguments carried by Dict"""
+        sender_name (str): Name of the sender
+        recieved_name (str): name of the reciever
+        msg_type (str): Type of message
+        dtype (str): Datatype of data in message
+        attr (list): The arguments carried by message
+        key_attr (Dict): The key word arguments carried by Dict
+    """
 
     def __init__(
         self,
