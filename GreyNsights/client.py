@@ -90,6 +90,11 @@ class DataSource:
         self.name = name
         self.additional_data = {"name": name, "sender": analyst.name}
         self.local_dataset = local_dataset
+        
+        if(self.virtual):
+            self.virtual_worker=worker
+        else:
+            self.virtual_worker=None
 
     def init_pointer(self):
         """Initialized pointer from the hosted dataset.
@@ -102,6 +107,7 @@ class DataSource:
                 self.owner.port,
                 "init_query",
                 additional_data=self.additional_data,
+                virtual_worker=self.virtual_worker
             )
             returned_msg = cmd.execute("init")
             returned_pt = returned_msg.data
@@ -114,7 +120,7 @@ class DataSource:
                 None,
                 "init_query",
                 additional_data=self.additional_data,
-                virtual_worker=self.owner,
+                virtual_worker=self.virtual_worker,
             )
             returned_msg = cmd.execute("init")
             returned_pt = returned_msg.data

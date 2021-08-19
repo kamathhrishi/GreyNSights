@@ -14,6 +14,7 @@ from .mpc import gen_shares
 from .utils import log_message
 
 
+
 class DataOwner:
     """DataOwner class handles all the functionalities relating to the Data owner (the host or owner of the data).
     It also stores the relevent details.
@@ -213,7 +214,7 @@ class Dataset:
                     workers[worker]["host"],
                     workers[worker]["port"],
                     "register_share",
-                    additional_data=additional_data,
+                    additional_data=additional_data
                 )
                 cmd.execute("register_share")
 
@@ -247,8 +248,15 @@ class Dataset:
 
         for i in recieved_msg.attr:
             if type(i) == Message and i.msg_type == "Pointer":
-                new_args.append(self.objects[i.data])
-                self.temp_buffer.append(self.buffer[i.data])
+                from GreyNsights.client import VirtualWorker
+                if(isinstance(self.owner,VirtualWorker)):
+                    obj = self.owner.objects[i.data]
+                else:
+                    obj = self.objects[i.data]
+                    
+                print("OBJECT: ",obj)
+                new_args.append(obj)
+                self.temp_buffer.append(self.owner.buffer[i.data])
                 # elf.temp_graph.append(i.data)
 
             else:
@@ -330,8 +338,13 @@ class Dataset:
         recieved_msg = recieved_msg"""
 
         # Substitute for type of message , should be replaced by type of message in furture
+        print("\n")
+        print(dir(recieved_msg))
+        print("\n")
         if hasattr(recieved_msg, "id"):
+            print("ID ,",recieved_msg.id)
             try:
+                print("ID ,",recieved_msg.id)
                 data = self.objects[recieved_msg.id]
             except KeyError:
                 data = self.owner.objects[recieved_msg.id]
@@ -340,8 +353,14 @@ class Dataset:
             self.temp_graph.append([recieved_msg.id, recieved_msg.data])
 
         else:
+            print("self.data: ",self.data)
             data = self.data
+            print("data: ",data)
             query = recieved_msg.data
+            
+        print("\n")
+        print("QUERY: ",query)
+        print("\n")
 
         recieved_msg = self.replace_pt_with_data(recieved_msg)
 

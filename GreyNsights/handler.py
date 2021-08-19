@@ -351,7 +351,11 @@ class QueryHandler:
         # Remove framework from kwargs
 
         if type(query) != list:
-
+            print("\n")
+            print("DATA: ",data)
+            print("\n")
+            print(query)
+            print("THIS SHOULDNT BE")
             result = getattr(data, query)(*args, **kwargs)
 
         else:

@@ -1,4 +1,6 @@
 """Generic functions for GreyNSights."""
+
+
 class Message:
     """Messages are generic datatypes to exchange information between server/client
 
@@ -21,6 +23,7 @@ class Message:
         key_attr=None,
         data=None,
         extra={},
+        framework=None
     ):
 
         self.reciever_name = reciever_name
@@ -30,6 +33,7 @@ class Message:
         self.attr = attr
         self.key_attr = key_attr
         self.dtype = dtype
+        self.framework = framework
 
         for key in extra.keys():
 
