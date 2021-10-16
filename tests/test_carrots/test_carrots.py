@@ -5,6 +5,8 @@ import pytest
 
 from GreyNsights.client import VirtualWorker
 from GreyNsights.config import Config
+from GreyNsights.frameworks import framework
+
 
 
 @pytest.fixture
@@ -21,6 +23,14 @@ def init_pointer():
     init_pointer = owner.data.init_pointer()
 
     return init_pointer, dataset
+
+def test_framework_hook(init_pointer):
+    frameworks = framework()
+    pandas = frameworks.pandas
+    df = pandas.DataFrame(init_pointer)
+    
+    
+
 
 
 def test_describe(init_pointer):
